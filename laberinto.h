@@ -58,7 +58,7 @@ class Laberinto {
   unsigned numero_filas_, numero_columnas_;
   // Vector de vectores que guarda todo el laberinto
   std::vector<std::vector<unsigned>> laberinto_;
-  // Set de nodos que guarda la solución
+  // Set de nodos que guarda la solución dada por el algoritmo A*
   std::set<Nodo*> solucion_;
 };
 
