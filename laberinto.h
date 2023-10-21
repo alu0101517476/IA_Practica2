@@ -7,6 +7,7 @@
 #include <set>
 #include <vector>
 
+#include "herramientas.h"
 #include "nodo.h"
 
 // Definimos algunas declarativas correspondientes con el fichero que hacen que
@@ -41,11 +42,15 @@ class Laberinto {
   // Método que se encarga de leer el fichero y guardar la información
   void LeerFichero(std::ifstream& fichero_laberinto);
   // Método que comprueba si un movimiento es válido
-  bool EsValido(const unsigned x, const unsigned y) const;
+  bool EsMovimientoValido(const unsigned x, const unsigned y) const;
+  bool EsCoordenadaValida(const unsigned x, const unsigned y) const;
   // Método que resuelve el laberinto mediante el algoritmo A*
   void AlgoritmoAEstrella();
   // Método que muestra la solución
   void MostrarCamino();
+  // Setter
+  void SetCasillaInicial(const unsigned x_inicial, const unsigned y_inicio);
+  void SetCasillaFinal(const unsigned x_final, const unsigned y_final);
   // Sobrecarga de operador << para mostrar el laberinto
   friend std::ostream& operator<<(std::ostream& os, const Laberinto& laberinto);
 

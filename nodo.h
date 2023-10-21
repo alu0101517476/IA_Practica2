@@ -24,12 +24,19 @@ class Nodo {
   unsigned GetFuncionEvaluacion() { return funcion_evaluacion_; }
   // Setters
   void SetPadre(Nodo* padre) { padre_ = padre; }
+  void SetCosteAcumulado(const unsigned coste_acumulado) { coste_acumulado_ = coste_acumulado; }
+  void SetFuncionEvaluacion(const unsigned funcion_evalacion) { funcion_evaluacion_ = funcion_evalacion; }
   // Método para calcular la función heurística
   unsigned CalcularFuncionHeuristica(const unsigned coordenada_fila_final, const unsigned coordenada_columna_final);
+  unsigned CalcularCosteAcumulado(const unsigned movimiento_nuevo);
+  unsigned CalcularFuncionEvaluacion(const unsigned coste_acumulado, const unsigned funcion_heuristica);
+
   // Sobrecarga de operadores
   bool operator<(Nodo* nodo2);
+  bool operator<(Nodo nodo2);
   bool operator==(Nodo* nodo2);
-
+  bool operator==(Nodo nodo2);
+  bool operator()(Nodo* nodo1 ,Nodo* nodo2);
  private:
   Nodo* padre_;
   // La coordenada de la fila dónde está la celda
@@ -42,6 +49,13 @@ class Nodo {
   unsigned funcion_heuristica_;
   // Este atributo representa f(n) = g(n) + h(n) de la celda
   unsigned funcion_evaluacion_;
+};
+
+// struct hecho para poder comparar 2 nodo* y que se puedan almacenar en un set
+struct ComparativaNodos {
+  bool operator()(Nodo* nodo1 ,Nodo* nodo2) {
+    return nodo1 < nodo2;
+  }
 };
 
 #endif
