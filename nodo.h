@@ -1,10 +1,8 @@
-#ifndef NODO_H
-#define NODO_H
+#pragma once
 
-#include <iostream>
 #include <cmath>
-
-class Laberinto;
+#include <iostream>
+#include <set>
 
 // Clase Nodo que representa a cada casilla del laberinto
 class Nodo {
@@ -15,28 +13,39 @@ class Nodo {
   Nodo(Nodo* padre, unsigned coordenada_fila, unsigned coordenada_columna,
        unsigned coste_acumulado, unsigned funcion_heuristica,
        unsigned funcion_evaluacion);
+  // Constructor de copia
+  Nodo(const Nodo& nodo2);
+  // Constructor de copia para convertir un Nodo* a un Nodo
+  Nodo(const Nodo* nodo2);
   // Getters
   Nodo* GetPadre() { return padre_; }
-  unsigned GetCoordenadaFila() { return coordenada_fila_; }
-  unsigned GetCoordenadaColumna() { return coordenada_columna_; }
-  unsigned GetCosteAcumulado() { return coste_acumulado_; }
-  unsigned GetFuncionHeuristica() { return funcion_heuristica_; }
-  unsigned GetFuncionEvaluacion() { return funcion_evaluacion_; }
+  unsigned GetCoordenadaFila() const { return coordenada_fila_; }
+  unsigned GetCoordenadaColumna() const { return coordenada_columna_; }
+  unsigned GetCosteAcumulado() const { return coste_acumulado_; }
+  unsigned GetFuncionHeuristica() const { return funcion_heuristica_; }
+  unsigned GetFuncionEvaluacion() const { return funcion_evaluacion_; }
   // Setters
   void SetPadre(Nodo* padre) { padre_ = padre; }
-  void SetCosteAcumulado(const unsigned coste_acumulado) { coste_acumulado_ = coste_acumulado; }
-  void SetFuncionEvaluacion(const unsigned funcion_evalacion) { funcion_evaluacion_ = funcion_evalacion; }
+  void SetCosteAcumulado(const unsigned coste_acumulado) {
+    coste_acumulado_ = coste_acumulado;
+  }
+  void SetFuncionEvaluacion(const unsigned funcion_evalacion) {
+    funcion_evaluacion_ = funcion_evalacion;
+  }
   // Método para calcular la función heurística
-  unsigned CalcularFuncionHeuristica(const unsigned coordenada_fila_final, const unsigned coordenada_columna_final);
+  unsigned CalcularHeuristicaNodo(const unsigned coordenada_fila_final,
+                                  const unsigned coordenada_columna_final);
   unsigned CalcularCosteAcumulado(const unsigned movimiento_nuevo);
-  unsigned CalcularFuncionEvaluacion(const unsigned coste_acumulado, const unsigned funcion_heuristica);
+  unsigned CalcularFE(const unsigned coste_acumulado,
+                      const unsigned funcion_heuristica);
 
   // Sobrecarga de operadores
-  bool operator<(Nodo* nodo2);
-  bool operator<(Nodo nodo2);
-  bool operator==(Nodo* nodo2);
-  bool operator==(Nodo nodo2);
-  bool operator()(Nodo* nodo1 ,Nodo* nodo2);
+  bool operator<(Nodo* nodo2) const;
+  bool operator<(const Nodo& nodo2) const;
+  bool operator==(Nodo* nodo2) const;
+  bool operator==(const Nodo& nodo2) const;
+  friend std::ostream& operator<<(std::ostream& os, Nodo nodo);
+  // bool operator()(Nodo* nodo1 ,Nodo* nodo2) const;
  private:
   Nodo* padre_;
   // La coordenada de la fila dónde está la celda
@@ -51,11 +60,4 @@ class Nodo {
   unsigned funcion_evaluacion_;
 };
 
-// struct hecho para poder comparar 2 nodo* y que se puedan almacenar en un set
-struct ComparativaNodos {
-  bool operator()(Nodo* nodo1 ,Nodo* nodo2) {
-    return nodo1 < nodo2;
-  }
-};
-
-#endif
+std::ostream& operator<<(std::ostream& os, Nodo nodo);

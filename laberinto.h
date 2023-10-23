@@ -1,5 +1,4 @@
-#ifndef LABERINTO_H
-#define LABERINTO_H
+#pragma once
 
 #include <fstream>
 #include <iostream>
@@ -16,22 +15,22 @@
 #define PASADIZO 0
 #define INICIO 3
 #define FINAL 4
+#define CAMINO 5
 
 // Definimos char para mostrar por pantalla el laberinto
 #define CARACTER_PARED "█"
 #define CARACTER_PASADIZO ' '
 #define CARACTER_ENTRADA 'S'
 #define CARACTER_SALIDA 'E'
-
-class Nodo;
+#define CARACTER_CAMINO 'X'
 
 // definimos el enum de movimientos:
-enum direction_t { N, E, S, W, NW, NE, SW, SE };
+enum coordenadas { N, E, S, W, NW, NE, SW, SE };
 
 // define array de desplazamiento en las 8 direcciones:
 //                  N  E  S  W  NW  NE  SW  SE
-const short y[] = {-1, 0, 1, 0, -1, -1, 1, 1};
-const short x[] = {0, 1, 0, -1, -1, 1, -1, 1};
+const short y[] = {-1, 0, 1, 0, -1, -1, 1, 1};  // Coordenadas columnas
+const short x[] = {0, 1, 0, -1, -1, 1, -1, 1};  // Coordenadas filas
 
 class Laberinto {
  public:
@@ -42,15 +41,17 @@ class Laberinto {
   // Método que se encarga de leer el fichero y guardar la información
   void LeerFichero(std::ifstream& fichero_laberinto);
   // Método que comprueba si un movimiento es válido
-  bool EsMovimientoValido(const unsigned x, const unsigned y) const;
+  bool EsMovimientoValido(const int x, const int y) const;
   bool EsCoordenadaValida(const unsigned x, const unsigned y) const;
   // Método que resuelve el laberinto mediante el algoritmo A*
-  void AlgoritmoAEstrella();
+  std::set<Nodo> AlgoritmoAEstrella();
   // Método que muestra la solución
   void MostrarCamino();
   // Setter
   void SetCasillaInicial(const unsigned x_inicial, const unsigned y_inicio);
   void SetCasillaFinal(const unsigned x_final, const unsigned y_final);
+  // Método para cambiar la casilla inicial y final a elección del usuario
+  void CambiarCasillas();
   // Sobrecarga de operador << para mostrar el laberinto
   friend std::ostream& operator<<(std::ostream& os, const Laberinto& laberinto);
 
@@ -68,5 +69,3 @@ class Laberinto {
 };
 
 std::ostream& operator<<(std::ostream& os, const Laberinto& laberinto);
-
-#endif
