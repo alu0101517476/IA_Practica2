@@ -5,6 +5,7 @@
 #include <limits>
 #include <set>
 #include <vector>
+#include <iomanip>
 
 #include "herramientas.h"
 #include "nodo.h"
@@ -47,6 +48,8 @@ class Laberinto {
   std::set<Nodo> AlgoritmoAEstrella();
   // Método que muestra la solución
   void MostrarCamino();
+  // Método que muestra estadísticas del laberinto en un fichero de salida
+  void MostrarEstadisticas(const std::string& nombre_instancia);
   // Setter
   void SetCasillaInicial(const unsigned x_inicial, const unsigned y_inicio);
   void SetCasillaFinal(const unsigned x_final, const unsigned y_final);
@@ -64,8 +67,12 @@ class Laberinto {
   unsigned numero_filas_, numero_columnas_;
   // Vector de vectores que guarda todo el laberinto
   std::vector<std::vector<unsigned>> laberinto_;
-  // Set de nodos que guarda la solución dada por el algoritmo A*
-  std::set<Nodo*> solucion_;
+  // Multiset de nodos que guarda los nodos generados
+  std::multiset<Nodo> nodos_generados_;
+  // Multiset de nodos que guarda los nodos inspeccionados
+  std::multiset<Nodo> nodos_inspeccionados_;
+  // Coste final del camino
+  unsigned coste_final_camino_;
 };
 
 std::ostream& operator<<(std::ostream& os, const Laberinto& laberinto);

@@ -76,6 +76,6 @@ bool Nodo::operator==(Nodo* nodo2) const {
 }
 
 std::ostream& operator<<(std::ostream& os, Nodo nodo) {
-  os << "(" << nodo.coordenada_fila_ << ", " << nodo.coordenada_columna_ << ")";
+  os << "(" << nodo.coordenada_fila_ << "," << nodo.coordenada_columna_ << ")";
   return os;
 }

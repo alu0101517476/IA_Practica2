@@ -34,3 +34,6 @@ unsigned CalcularHeuristica(const unsigned coordenada_fila_actual,
 // Función que calcula la función de evaluación de un nodo
 unsigned CalcularFuncionEvaluacion(const unsigned coste_acumulado,
                                    const unsigned funcion_heuristica);
+
+
+void MostrarMultisetNodosFichero(const std::multiset<Nodo>& nodos, std::ofstream& fichero);

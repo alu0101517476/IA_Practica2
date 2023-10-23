@@ -25,3 +25,10 @@ unsigned CalcularFuncionEvaluacion(const unsigned coste_acumulado,
   // f(n) = g(n) + h(n)
   return coste_acumulado + funcion_heuristica;
 }
+
+void MostrarMultisetNodosFichero(const std::multiset<Nodo>& nodos, std::ofstream& fichero) {
+  for (const auto& nodo : nodos) {
+    fichero << nodo << " ";
+  }
+  fichero << std::endl;
+}

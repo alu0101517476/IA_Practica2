@@ -116,8 +116,6 @@ bool Laberinto::EsCoordenadaValida(const unsigned fila,
 std::set<Nodo> Laberinto::AlgoritmoAEstrella() {
   // Multiset que representa la lista de nodos abiertos
   std::multiset<Nodo*, ComparativaNodos> nodos_abiertos, nodos_cerrados;
-  // Set que representa la lista de nodos cerrados
-  std::vector<Nodo> nodos_generados, nodos_inspeccionados;
   // Insertar el nodo inicial en la lista de nodos abiertos
   unsigned heuristica_inicial{ CalcularHeuristica(x_inicio_, y_inicio_, x_final_, y_final_) };
   nodos_abiertos.insert(new Nodo(NULL, x_inicio_, y_inicio_,
@@ -128,12 +126,16 @@ std::set<Nodo> Laberinto::AlgoritmoAEstrella() {
     // nodos cerrados C.
     Nodo* nodo_menor_coste{*nodos_abiertos.begin()};
     nodos_abiertos.erase(nodos_abiertos.begin());
-
-    nodos_generados.emplace_back(nodo_menor_coste);
     // Lo insertamos en la lista de nodos cerrados
     nodos_cerrados.insert(nodo_menor_coste);
+    // Lo insertamos en la lista de nodos generados
+    nodos_generados_.insert(*nodo_menor_coste);
+    // Lo insertamos en la lista de nodos inspeccionados
+    nodos_inspeccionados_.insert(*nodo_menor_coste);
     // Comprobamos si las coordenadas del nodo con menor coste son las coordenadas finales
     if (nodo_menor_coste->GetCoordenadaFila() == x_final_ && nodo_menor_coste->GetCoordenadaColumna() == y_final_) {
+      // Guardamos el coste final del camino
+      coste_final_camino_ = nodo_menor_coste->GetCosteAcumulado();
       Nodo* nodo_camino{nodo_menor_coste};
       std::set<Nodo> camino_solucion;
       while (nodo_camino != NULL) {
@@ -164,12 +166,16 @@ std::set<Nodo> Laberinto::AlgoritmoAEstrella() {
         if (iterador_nodos_abiertos == nodos_abiertos.end() && iterador_nodos_cerrados == nodos_cerrados.end()) {
           // Si el nodo vecino no está en A ni en C, su nodo padre será el nodo analizado y será insertado en A.
           nodos_abiertos.insert(new Nodo(nodo_vecino));
+          // Insertamos en la lista de nodos generados el nodo vecino
+          nodos_generados_.insert(nodo_vecino);
         } else if (iterador_nodos_abiertos != nodos_abiertos.end()) { // Comprobamos que el nodo vecino está en A
           if (nodo_vecino->GetCosteAcumulado() < (*iterador_nodos_abiertos)->GetCosteAcumulado()) {
             // Si el nodo vecino tiene un coste menor al nodo que ya está en el set
             // borramos el nodo e insertamos el nuevo con un valor menor
             nodos_abiertos.erase(iterador_nodos_abiertos);
             nodos_abiertos.insert(new Nodo(nodo_vecino));
+            // Insertamos en la lista de nodos generados el nodo vecino
+            nodos_generados_.insert(nodo_vecino);
           }
         }
       }
@@ -185,6 +191,27 @@ void Laberinto::MostrarCamino() {
     laberinto_[nodo.GetCoordenadaFila()][nodo.GetCoordenadaColumna()] = CAMINO;
   }
   std::cout << *this;
+}
+
+// Método que muestra estadísticas del laberinto en un fichero de salida
+void Laberinto::MostrarEstadisticas(const std::string& nombre_instancia) {
+  std::ofstream fichero_estadisticas;
+  fichero_estadisticas.open("estadisticas.txt", std::ios::out);
+  fichero_estadisticas << "Instancia: " << nombre_instancia << std::endl;
+  fichero_estadisticas << "Número de filas(n): " << numero_filas_ << std::endl;
+  fichero_estadisticas << "Número de columnas(m): " << numero_columnas_ << std::endl; 
+  fichero_estadisticas << "Casilla inicial(S): (" << (x_inicio_ + 1)<< "," << (y_inicio_ + 1) << ")" << std::endl;
+  fichero_estadisticas << "Casilla final(E): (" << (x_final_ + 1) << "," << (y_final_ + 1) << ")" << std::endl;
+  fichero_estadisticas << "Coste: " << coste_final_camino_ << std::endl;
+  fichero_estadisticas << "--------------------------------------------------" << std::endl;
+  fichero_estadisticas << "Lista de Nodos generados: " << std::endl;
+  MostrarMultisetNodosFichero(nodos_generados_, fichero_estadisticas);
+  fichero_estadisticas << "Número de nodos generados: " << nodos_generados_.size() << std::endl;
+  fichero_estadisticas << "--------------------------------------------------" << std::endl;
+  fichero_estadisticas << "Nodos inspeccionados: " << std::endl;
+  MostrarMultisetNodosFichero(nodos_inspeccionados_, fichero_estadisticas);
+  fichero_estadisticas << "Número de nodos inspeccionados: " << nodos_inspeccionados_.size() << std::endl;
+  fichero_estadisticas << "--------------------------------------------------" << std::endl;
 }
 
 // Sobrecarga de operador << para mostrar el laberinto por pantalla
