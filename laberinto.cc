@@ -261,6 +261,7 @@ std::set<Nodo> Laberinto::AlgoritmoAEstrellaEuclidea() {
 // Hazme un método que muestre el camino resuelto por el método Laberinto::AlgoritmoAEstrella() marcando el camino con X
 void Laberinto::MostrarCamino() {
   for (const auto& nodo : AlgoritmoAEstrellaManhattan()) {
+    camino_.insert(nodo);
     laberinto_[nodo.GetCoordenadaFila()][nodo.GetCoordenadaColumna()] = CAMINO;
   }
   std::cout << *this;
@@ -275,7 +276,32 @@ void Laberinto::MostrarEstadisticas(const std::string& nombre_instancia) {
   fichero_estadisticas << "Número de columnas(m): " << numero_columnas_ << std::endl; 
   fichero_estadisticas << "Casilla inicial(S): (" << (x_inicio_ + 1)<< "," << (y_inicio_ + 1) << ")" << std::endl;
   fichero_estadisticas << "Casilla final(E): (" << (x_final_ + 1) << "," << (y_final_ + 1) << ")" << std::endl;
+  fichero_estadisticas << "--------------------------------------------------" << std::endl;
+  fichero_estadisticas << "Camino Final: " << std::endl;
+  MostrarCaminoFichero(camino_, fichero_estadisticas);
+  fichero_estadisticas << "--------------------------------------------------" << std::endl;
   fichero_estadisticas << "Coste: " << coste_final_camino_ << std::endl;
+  fichero_estadisticas << "--------------------------------------------------" << std::endl;
+  fichero_estadisticas << "Lista de Nodos generados: " << std::endl;
+  MostrarMultisetNodosFichero(nodos_generados_, fichero_estadisticas);
+  fichero_estadisticas << "Número de nodos generados: " << nodos_generados_.size() << std::endl;
+  fichero_estadisticas << "--------------------------------------------------" << std::endl;
+  fichero_estadisticas << "Nodos inspeccionados: " << std::endl;
+  MostrarMultisetNodosFichero(nodos_inspeccionados_, fichero_estadisticas);
+  fichero_estadisticas << "Número de nodos inspeccionados: " << nodos_inspeccionados_.size() << std::endl;
+  fichero_estadisticas << "--------------------------------------------------" << std::endl;
+}
+
+// Método que muestra estadísticas del laberinto en un fichero de salida cuando no ha habido camino solución
+void Laberinto::MostrarEstadisticasSinCamino(const std::string& nombre_instancia) {
+  std::ofstream fichero_estadisticas;
+  fichero_estadisticas.open("estadisticas.txt", std::ios::out);
+  fichero_estadisticas << "NO SE HA ENCONTRADO SOLUCIÓN" << std::endl;
+  fichero_estadisticas << "Instancia: " << nombre_instancia << std::endl;
+  fichero_estadisticas << "Número de filas(n): " << numero_filas_ << std::endl;
+  fichero_estadisticas << "Número de columnas(m): " << numero_columnas_ << std::endl; 
+  fichero_estadisticas << "Casilla inicial(S): (" << (x_inicio_ + 1)<< "," << (y_inicio_ + 1) << ")" << std::endl;
+  fichero_estadisticas << "Casilla final(E): (" << (x_final_ + 1) << "," << (y_final_ + 1) << ")" << std::endl;
   fichero_estadisticas << "--------------------------------------------------" << std::endl;
   fichero_estadisticas << "Lista de Nodos generados: " << std::endl;
   MostrarMultisetNodosFichero(nodos_generados_, fichero_estadisticas);

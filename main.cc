@@ -41,10 +41,10 @@ int main(int argc, char* argv[]) {
   std::cin >> opcion;
   switch (opcion) {
     case 1: // Algoritmo A* con heurística Manhattan
-      if (laberinto.AlgoritmoAEstrellaManhattan().empty()) {
-        std::cout << "No se ha encontrado solución para el algoritmo A* con la heurística Manhattan" << std::endl;
+      if (laberinto.AlgoritmoAEstrellaManhattan().empty()) { // No se ha encontrado solución
+        laberinto.MostrarEstadisticasSinCamino(nombre_instancia);
         exit(1);
-      } else {
+      } else { // Se encontró una solución
         std::cout << "El camino es el siguiente: " << std::endl;
         laberinto.MostrarCamino();
         laberinto.MostrarEstadisticas(nombre_instancia);
@@ -52,10 +52,10 @@ int main(int argc, char* argv[]) {
       }
       break;
     case 2: // Algoritmo A* con heurística Euclídea
-      if (laberinto.AlgoritmoAEstrellaEuclidea().empty()) {
-        std::cout << "No se ha encontrado solución para el algoritmo A* con la heurística Euclídea" << std::endl;
+      if (laberinto.AlgoritmoAEstrellaEuclidea().empty()) { // No se ha encontrado solución
+        laberinto.MostrarEstadisticasSinCamino(nombre_instancia);
         exit(1);
-      } else {
+      } else { // Se encontró una solución
         std::cout << "El camino es el siguiente: " << std::endl;
         laberinto.MostrarCamino();
         laberinto.MostrarEstadisticas(nombre_instancia);
@@ -65,6 +65,6 @@ int main(int argc, char* argv[]) {
     default:
       std::cout << "Error, Opción no válida";
       exit(1);
-  }
+  } 
   return 0;
 }

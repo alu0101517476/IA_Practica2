@@ -1,0 +1,15 @@
+NO SE HA ENCONTRADO SOLUCIÓN
+Instancia: sin_salida
+Número de filas(n): 9
+Número de columnas(m): 6
+Casilla inicial(S): (3,1)
+Casilla final(E): (4,9)
+--------------------------------------------------
+Lista de Nodos generados: 
+(3,1) (4,2) (4,2) (3,2) (3,2) (2,2) (2,2) (5,2) (5,2) 
+Número de nodos generados: 9
+--------------------------------------------------
+Nodos inspeccionados: 
+(3,1) (4,2) (3,2) (2,2) (5,2) 
+Número de nodos inspeccionados: 5
+--------------------------------------------------

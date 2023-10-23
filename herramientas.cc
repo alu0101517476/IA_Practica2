@@ -42,3 +42,10 @@ void MostrarMultisetNodosFichero(const std::multiset<Nodo>& nodos, std::ofstream
   }
   fichero << std::endl;
 }
+
+void MostrarCaminoFichero(const std::set<Nodo>& camino, std::ofstream& fichero) {
+  for (const auto& nodo : camino) {
+    fichero << nodo << " ";
+  }
+  fichero << std::endl;
+}

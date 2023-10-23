@@ -76,6 +76,16 @@ bool Nodo::operator==(Nodo* nodo2) const {
 }
 
 std::ostream& operator<<(std::ostream& os, Nodo nodo) {
-  os << "(" << nodo.coordenada_fila_ << "," << nodo.coordenada_columna_ << ")";
+  os << "(" << (nodo.coordenada_fila_ + 1) << "," << (nodo.coordenada_columna_ + 1) << ")";
   return os;
+}
+
+Nodo& Nodo::operator=(const Nodo& nodo2) {
+  padre_ = nodo2.padre_;
+  coordenada_fila_ = nodo2.coordenada_fila_;
+  coordenada_columna_ = nodo2.coordenada_columna_;
+  coste_acumulado_ = nodo2.coste_acumulado_;
+  funcion_heuristica_ = nodo2.funcion_heuristica_;
+  funcion_evaluacion_ = nodo2.funcion_evaluacion_;
+  return *this;
 }

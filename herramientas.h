@@ -41,5 +41,8 @@ unsigned CalcularHeuristicaEuclideana(const unsigned coordenada_fila_actual,
 unsigned CalcularFuncionEvaluacion(const unsigned coste_acumulado,
                                    const unsigned funcion_heuristica);
 
-
+// Función que muestra el contenido de un multiset y lo guarda en un fichero
 void MostrarMultisetNodosFichero(const std::multiset<Nodo>& nodos, std::ofstream& fichero);
+
+// Función que muestra el camino hallado con el algoritmo A* y lo guarda en un fichero
+void MostrarCaminoFichero(const std::set<Nodo>& camino, std::ofstream& fichero);

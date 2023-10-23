@@ -48,13 +48,18 @@ class Laberinto {
   std::set<Nodo> AlgoritmoAEstrellaManhattan();
   // Método que resuelve el laberinto mediante el algoritmo A* con heurística Euclídea
   std::set<Nodo> AlgoritmoAEstrellaEuclidea();
-  // Método que muestra la solución
+  // Método que muestra la solución por pantalla de manera gráfica
   void MostrarCamino();
+  // Getters
+  std::set<Nodo> GetCamino() const { return camino_; }
   // Método que muestra estadísticas del laberinto en un fichero de salida
   void MostrarEstadisticas(const std::string& nombre_instancia);
-  // Setter
+  // Método que muestra estadísticas del laberinto en un fichero de salida cuando no ha habido camino solución
+  void MostrarEstadisticasSinCamino(const std::string& nombre_instancia);
+  // Setters
   void SetCasillaInicial(const unsigned x_inicial, const unsigned y_inicio);
   void SetCasillaFinal(const unsigned x_final, const unsigned y_final);
+  void SetCamino(const std::set<Nodo>& camino) { camino_ = camino; }
   // Método para cambiar la casilla inicial y final a elección del usuario
   void CambiarCasillas();
   // Sobrecarga de operador << para mostrar el laberinto
@@ -73,6 +78,8 @@ class Laberinto {
   std::multiset<Nodo> nodos_generados_;
   // Multiset de nodos que guarda los nodos inspeccionados
   std::multiset<Nodo> nodos_inspeccionados_;
+  // Set de nodos que guarda el camino hallado con el algoritmo A*
+  std::set<Nodo> camino_;
   // Coste final del camino
   unsigned coste_final_camino_;
 };

@@ -44,6 +44,7 @@ class Nodo {
   bool operator<(const Nodo& nodo2) const;
   bool operator==(Nodo* nodo2) const;
   bool operator==(const Nodo& nodo2) const;
+  Nodo& operator=(const Nodo& nodo2);
   friend std::ostream& operator<<(std::ostream& os, Nodo nodo);
   // bool operator()(Nodo* nodo1 ,Nodo* nodo2) const;
  private:
