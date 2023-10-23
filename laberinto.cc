@@ -113,11 +113,11 @@ bool Laberinto::EsCoordenadaValida(const unsigned fila,
 }
 
 // Método que resuelve el laberinto mediante el algoritmo A*
-std::set<Nodo> Laberinto::AlgoritmoAEstrella() {
+std::set<Nodo> Laberinto::AlgoritmoAEstrellaManhattan() {
   // Multiset que representa la lista de nodos abiertos
   std::multiset<Nodo*, ComparativaNodos> nodos_abiertos, nodos_cerrados;
   // Insertar el nodo inicial en la lista de nodos abiertos
-  unsigned heuristica_inicial{ CalcularHeuristica(x_inicio_, y_inicio_, x_final_, y_final_) };
+  unsigned heuristica_inicial{ CalcularHeuristicaManhattan(x_inicio_, y_inicio_, x_final_, y_final_) };
   nodos_abiertos.insert(new Nodo(NULL, x_inicio_, y_inicio_,
                                  0, heuristica_inicial, heuristica_inicial));
   // Métemos como nodo generado el nodo inicial
@@ -157,7 +157,80 @@ std::set<Nodo> Laberinto::AlgoritmoAEstrella() {
         coste_acumulado += (i <= W) ? 5 : 7;
         unsigned coordenada_fila_actual{nodo_menor_coste->GetCoordenadaFila() + x[i]};
         unsigned coordenada_columna_actual{nodo_menor_coste->GetCoordenadaColumna() + y[i]};
-        unsigned heuristica_actual{CalcularHeuristica(coordenada_fila_actual, coordenada_columna_actual, x_final_, y_final_)};
+        unsigned heuristica_actual{CalcularHeuristicaManhattan(coordenada_fila_actual, coordenada_columna_actual, x_final_, y_final_)};
+        unsigned funcion_evaluacion_actual{coste_acumulado + heuristica_actual};
+        Nodo* nodo_vecino = new Nodo(nodo_menor_coste, coordenada_fila_actual, coordenada_columna_actual, coste_acumulado, heuristica_actual, funcion_evaluacion_actual);
+        // Comprobamos si el nodo vecino no está ni en A ni en C
+        auto iterador_nodos_abiertos{EncontrarElemento(nodos_abiertos, nodo_vecino->GetCoordenadaFila(), nodo_vecino->GetCoordenadaColumna())};
+        auto iterador_nodos_cerrados{EncontrarElemento(nodos_cerrados, nodo_vecino->GetCoordenadaFila(), nodo_vecino->GetCoordenadaColumna())};
+        if (iterador_nodos_abiertos == nodos_abiertos.end() && iterador_nodos_cerrados == nodos_cerrados.end()) {
+          // Si el nodo vecino no está en A ni en C, su nodo padre será el nodo analizado y será insertado en A.
+          nodos_abiertos.insert(new Nodo(nodo_vecino));
+          // Insertamos en la lista de nodos generados el nodo vecino
+          nodos_generados_.insert(nodo_vecino);
+        } else if (iterador_nodos_abiertos != nodos_abiertos.end()) { // Comprobamos que el nodo vecino está en A
+          if (nodo_vecino->GetCosteAcumulado() < (*iterador_nodos_abiertos)->GetCosteAcumulado()) {
+            // Si el nodo vecino tiene un coste menor al nodo que ya está en el set
+            // borramos el nodo e insertamos el nuevo con un valor menor
+            nodos_abiertos.erase(iterador_nodos_abiertos);
+            nodos_abiertos.insert(new Nodo(nodo_vecino));
+            // Insertamos en la lista de nodos generados el nodo vecino
+            nodos_generados_.insert(nodo_vecino);
+          }
+        }
+      }
+    }
+  }
+  // Si salimos del while es que no hemos encontrado un camino por lo que retornamos un set de nodos vacio
+  return std::set<Nodo>{};
+}
+
+// Método que resuelve el laberinto mediante el algoritmo A* con heurística Euclídea
+std::set<Nodo> Laberinto::AlgoritmoAEstrellaEuclidea() {
+  // Multiset que representa la lista de nodos abiertos
+  std::multiset<Nodo*, ComparativaNodos> nodos_abiertos, nodos_cerrados;
+  // Insertar el nodo inicial en la lista de nodos abiertos
+  unsigned heuristica_inicial{ CalcularHeuristicaEuclideana(x_inicio_, y_inicio_, x_final_, y_final_) };
+  nodos_abiertos.insert(new Nodo(NULL, x_inicio_, y_inicio_,
+                                 0, heuristica_inicial, heuristica_inicial));
+  // Métemos como nodo generado el nodo inicial
+  while (!nodos_abiertos.empty()) {
+    // Seleccionar el nodo de menor coste f(n), e insertarlo en la lista de
+    // nodos cerrados C.
+    Nodo* nodo_menor_coste{*nodos_abiertos.begin()};
+    nodos_abiertos.erase(nodos_abiertos.begin());
+    // Lo insertamos en la lista de nodos cerrados
+    nodos_cerrados.insert(nodo_menor_coste);
+    // Lo insertamos en la lista de nodos generados
+    nodos_generados_.insert(*nodo_menor_coste);
+    // Lo insertamos en la lista de nodos inspeccionados
+    nodos_inspeccionados_.insert(*nodo_menor_coste);
+    // Comprobamos si las coordenadas del nodo con menor coste son las coordenadas finales
+    if (nodo_menor_coste->GetCoordenadaFila() == x_final_ && nodo_menor_coste->GetCoordenadaColumna() == y_final_) {
+      // Guardamos el coste final del camino
+      coste_final_camino_ = nodo_menor_coste->GetCosteAcumulado();
+      Nodo* nodo_camino{nodo_menor_coste};
+      std::set<Nodo> camino_solucion;
+      while (nodo_camino != NULL) {
+        camino_solucion.insert(*nodo_camino);
+        nodo_camino = nodo_camino->GetPadre();
+      }
+      delete nodo_camino;
+      // Devolvemos el camino
+      return camino_solucion;
+    }
+    // inspeccionamos nodos vecinos
+    for (int i{0}; i < 8; ++i) {
+      // Comprobamos todos los nodos posibles vecinos
+      if (EsMovimientoValido(
+              nodo_menor_coste->GetCoordenadaFila() + x[i],
+              nodo_menor_coste->GetCoordenadaColumna() + y[i])) {
+        unsigned coste_acumulado{nodo_menor_coste->GetCosteAcumulado()};
+        // Comprobamos que movimiento es para sumarle el coste
+        coste_acumulado += (i <= W) ? 5 : 7;
+        unsigned coordenada_fila_actual{nodo_menor_coste->GetCoordenadaFila() + x[i]};
+        unsigned coordenada_columna_actual{nodo_menor_coste->GetCoordenadaColumna() + y[i]};
+        unsigned heuristica_actual{CalcularHeuristicaEuclideana(coordenada_fila_actual, coordenada_columna_actual, x_final_, y_final_)};
         unsigned funcion_evaluacion_actual{coste_acumulado + heuristica_actual};
         Nodo* nodo_vecino = new Nodo(nodo_menor_coste, coordenada_fila_actual, coordenada_columna_actual, coste_acumulado, heuristica_actual, funcion_evaluacion_actual);
         // Comprobamos si el nodo vecino no está ni en A ni en C
@@ -187,7 +260,7 @@ std::set<Nodo> Laberinto::AlgoritmoAEstrella() {
 
 // Hazme un método que muestre el camino resuelto por el método Laberinto::AlgoritmoAEstrella() marcando el camino con X
 void Laberinto::MostrarCamino() {
-  for (const auto& nodo : AlgoritmoAEstrella()) {
+  for (const auto& nodo : AlgoritmoAEstrellaManhattan()) {
     laberinto_[nodo.GetCoordenadaFila()][nodo.GetCoordenadaColumna()] = CAMINO;
   }
   std::cout << *this;

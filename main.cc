@@ -26,24 +26,45 @@ int main(int argc, char* argv[]) {
   int opcion;
   std::cin >> opcion;
   switch (opcion) {
-    case 1:
+    case 1: // Cambiar casilla inicial y final
       laberinto.CambiarCasillas();
       std::cout << laberinto << std::endl;
       break;
-    case 2:
+    case 2: // Laberinto por defecto
       std::cout << laberinto << std::endl;
       break;
     default:
-      std::cout << "Opción no válida";
+      std::cout << "Error, Opción no válida";
       exit(1);
   } 
-  if (laberinto.AlgoritmoAEstrella().empty()) {
-    std::cout << "No se ha encontrado solución para el algoritmo A*" << std::endl;
-    exit(1);
+  std::cout << "Desea aplicar el algoritmo A* con la heurística de la distancia Manhattan o la Euclídea?\n1) Manhattan\n2) Euclídea" << std::endl;
+  std::cin >> opcion;
+  switch (opcion) {
+    case 1: // Algoritmo A* con heurística Manhattan
+      if (laberinto.AlgoritmoAEstrellaManhattan().empty()) {
+        std::cout << "No se ha encontrado solución para el algoritmo A* con la heurística Manhattan" << std::endl;
+        exit(1);
+      } else {
+        std::cout << "El camino es el siguiente: " << std::endl;
+        laberinto.MostrarCamino();
+        laberinto.MostrarEstadisticas(nombre_instancia);
+        std::cout << std::endl;
+      }
+      break;
+    case 2: // Algoritmo A* con heurística Euclídea
+      if (laberinto.AlgoritmoAEstrellaEuclidea().empty()) {
+        std::cout << "No se ha encontrado solución para el algoritmo A* con la heurística Euclídea" << std::endl;
+        exit(1);
+      } else {
+        std::cout << "El camino es el siguiente: " << std::endl;
+        laberinto.MostrarCamino();
+        laberinto.MostrarEstadisticas(nombre_instancia);
+        std::cout << std::endl;
+      }
+      break;
+    default:
+      std::cout << "Error, Opción no válida";
+      exit(1);
   }
-  std::cout << "El camino es el siguiente: " << std::endl;
-  laberinto.MostrarCamino();
-  laberinto.MostrarEstadisticas(nombre_instancia);
-  std::cout << std::endl;
   return 0;
 }

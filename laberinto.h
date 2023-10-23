@@ -44,8 +44,10 @@ class Laberinto {
   // Método que comprueba si un movimiento es válido
   bool EsMovimientoValido(const int x, const int y) const;
   bool EsCoordenadaValida(const unsigned x, const unsigned y) const;
-  // Método que resuelve el laberinto mediante el algoritmo A*
-  std::set<Nodo> AlgoritmoAEstrella();
+  // Método que resuelve el laberinto mediante el algoritmo A* con heurística Manhattan
+  std::set<Nodo> AlgoritmoAEstrellaManhattan();
+  // Método que resuelve el laberinto mediante el algoritmo A* con heurística Euclídea
+  std::set<Nodo> AlgoritmoAEstrellaEuclidea();
   // Método que muestra la solución
   void MostrarCamino();
   // Método que muestra estadísticas del laberinto en un fichero de salida

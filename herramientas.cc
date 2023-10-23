@@ -11,13 +11,23 @@ std::multiset<Nodo*, ComparativaNodos>::iterator EncontrarElemento(const std::mu
   return lista_nodos.end();
 }
 
-unsigned CalcularHeuristica(const unsigned coordenada_fila_actual,
+// Función que calcula la heurística Manhattan de un nodo
+unsigned CalcularHeuristicaManhattan(const unsigned coordenada_fila_actual,
                                    const unsigned coordenada_columna_actual,
                                    const unsigned coordenada_fila_final,
                                    const unsigned coordenada_columna_final) {
   return (static_cast<unsigned>(abs(coordenada_fila_final - coordenada_fila_actual) +
            abs(coordenada_columna_final - coordenada_columna_actual)) *
           3);
+}
+
+// Función que calcula la heurística Euclídea de un nodo
+unsigned CalcularHeuristicaEuclideana(const unsigned coordenada_fila_actual,
+                            const unsigned coordenada_columna_actual,
+                            const unsigned coordenada_fila_final,
+                            const unsigned coordenada_columna_final) {
+  return (static_cast<unsigned>(sqrt(pow((coordenada_fila_final - coordenada_fila_actual), 2) +
+                                      pow((coordenada_columna_final - coordenada_columna_actual), 2))));
 }
 
 unsigned CalcularFuncionEvaluacion(const unsigned coste_acumulado,

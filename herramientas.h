@@ -25,8 +25,14 @@ std::multiset<Nodo*, ComparativaNodos>::iterator EncontrarElemento(
     const std::multiset<Nodo*, ComparativaNodos>& nodos_abiertos,
     unsigned coordenada_fila, unsigned coordenada_columna);
 
-// Función que calcula la heurística de un nodo
-unsigned CalcularHeuristica(const unsigned coordenada_fila_actual,
+// Función que calcula la heurística Manhattan de un nodo
+unsigned CalcularHeuristicaManhattan(const unsigned coordenada_fila_actual,
+                            const unsigned coordenada_columna_actual,
+                            const unsigned coordenada_fila_final,
+                            const unsigned coordenada_columna_final);
+
+// Función que calcula la heurística Euclídea de un nodo
+unsigned CalcularHeuristicaEuclideana(const unsigned coordenada_fila_actual,
                             const unsigned coordenada_columna_actual,
                             const unsigned coordenada_fila_final,
                             const unsigned coordenada_columna_final);
