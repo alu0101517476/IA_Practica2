@@ -30,11 +30,11 @@ void Laberinto::SetCasillaFinal(const unsigned x_final,
 // Método que se encarga de leer el fichero y guardar la información para
 // construir el laberinto
 void Laberinto::LeerFichero(std::ifstream& fichero_laberinto) {
-  fichero_laberinto >> numero_columnas_ >> numero_filas_;
+  fichero_laberinto >> numero_filas_ >> numero_columnas_;
   laberinto_ = std::vector<std::vector<unsigned>>{
-      numero_columnas_, std::vector<unsigned>(numero_filas_)};
-  for (size_t x{0}; x < numero_columnas_; ++x) {
-    for (size_t y{0}; y < numero_filas_; ++y) {
+      numero_filas_, std::vector<unsigned>(numero_columnas_)};
+  for (size_t x{0}; x < numero_filas_; ++x) {
+    for (size_t y{0}; y < numero_columnas_; ++y) {
       unsigned identificacion;
       fichero_laberinto >> identificacion;
       //  Guardamos la entrada en caso de que se cumpla la condición
@@ -64,16 +64,18 @@ void Laberinto::CambiarCasillas() {
     std::cin >> x_aux;
     std::cout << "Introduzca la nueva coordenada y de la casilla inicial: ";
     std::cin >> y_aux;
-    if (EsCoordenadaValida(x_aux, y_aux)) {
+    //if (EsCoordenadaValida(x_aux, y_aux)) {
       laberinto_[x_inicio_][y_inicio_] = PARED;
       x_inicio_ = x_aux;
       y_inicio_ = y_aux;
       laberinto_[x_inicio_][y_inicio_] = INICIO;
+      /*
     } else {
       std::cout << "\nError, coordenadas las coordenadas introducidas son "
                    "incorrectas\nLas coordenadas serán las originales"
                 << std::endl;
     }
+    */
   }
   // Posibilidad de cambiar casilla final
   std::cout << "\nLa casilla final actual está en las coordenadas:\n("
@@ -107,9 +109,9 @@ bool Laberinto::EsMovimientoValido(const int fila,
 }
 
 // Método que comprueba si una coordenada introducida es válida
-bool Laberinto::EsCoordenadaValida(const unsigned fila,
-                                   const unsigned columna) const {
-  return fila <= numero_filas_ && columna <= numero_columnas_;
+bool Laberinto::EsCoordenadaValida(const int fila,
+                                   const int columna) const {
+  return fila < int(numero_filas_) && columna < int(numero_columnas_);
 }
 
 // Método que resuelve el laberinto mediante el algoritmo A*
@@ -274,8 +276,8 @@ void Laberinto::MostrarEstadisticas(const std::string& nombre_instancia) {
   fichero_estadisticas << "Instancia: " << nombre_instancia << std::endl;
   fichero_estadisticas << "Número de filas(n): " << numero_filas_ << std::endl;
   fichero_estadisticas << "Número de columnas(m): " << numero_columnas_ << std::endl; 
-  fichero_estadisticas << "Casilla inicial(S): (" << (x_inicio_ + 1)<< "," << (y_inicio_ + 1) << ")" << std::endl;
-  fichero_estadisticas << "Casilla final(E): (" << (x_final_ + 1) << "," << (y_final_ + 1) << ")" << std::endl;
+  fichero_estadisticas << "Casilla inicial(S): (" << (x_inicio_)<< "," << (y_inicio_ ) << ")" << std::endl;
+  fichero_estadisticas << "Casilla final(E): (" << (x_final_ ) << "," << (y_final_ ) << ")" << std::endl;
   fichero_estadisticas << "--------------------------------------------------" << std::endl;
   fichero_estadisticas << "Camino Final: " << std::endl;
   MostrarCaminoFichero(camino_, fichero_estadisticas);
@@ -300,8 +302,8 @@ void Laberinto::MostrarEstadisticasSinCamino(const std::string& nombre_instancia
   fichero_estadisticas << "Instancia: " << nombre_instancia << std::endl;
   fichero_estadisticas << "Número de filas(n): " << numero_filas_ << std::endl;
   fichero_estadisticas << "Número de columnas(m): " << numero_columnas_ << std::endl; 
-  fichero_estadisticas << "Casilla inicial(S): (" << (x_inicio_ + 1)<< "," << (y_inicio_ + 1) << ")" << std::endl;
-  fichero_estadisticas << "Casilla final(E): (" << (x_final_ + 1) << "," << (y_final_ + 1) << ")" << std::endl;
+  fichero_estadisticas << "Casilla inicial(S): (" << (x_inicio_)<< "," << (y_inicio_) << ")" << std::endl;
+  fichero_estadisticas << "Casilla final(E): (" << (x_final_) << "," << (y_final_) << ")" << std::endl;
   fichero_estadisticas << "--------------------------------------------------" << std::endl;
   fichero_estadisticas << "Lista de Nodos generados: " << std::endl;
   MostrarMultisetNodosFichero(nodos_generados_, fichero_estadisticas);

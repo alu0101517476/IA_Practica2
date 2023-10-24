@@ -21,7 +21,7 @@
 // Definimos char para mostrar por pantalla el laberinto
 #define CARACTER_PARED "█"
 #define CARACTER_PASADIZO ' '
-#define CARACTER_ENTRADA 'S'
+#define CARACTER_ENTRADA 'S'    
 #define CARACTER_SALIDA 'E'
 #define CARACTER_CAMINO 'X'
 
@@ -43,7 +43,7 @@ class Laberinto {
   void LeerFichero(std::ifstream& fichero_laberinto);
   // Método que comprueba si un movimiento es válido
   bool EsMovimientoValido(const int x, const int y) const;
-  bool EsCoordenadaValida(const unsigned x, const unsigned y) const;
+  bool EsCoordenadaValida(const int x, const int y) const;
   // Método que resuelve el laberinto mediante el algoritmo A* con heurística Manhattan
   std::set<Nodo> AlgoritmoAEstrellaManhattan();
   // Método que resuelve el laberinto mediante el algoritmo A* con heurística Euclídea
