@@ -64,18 +64,16 @@ void Laberinto::CambiarCasillas() {
     std::cin >> x_aux;
     std::cout << "Introduzca la nueva coordenada y de la casilla inicial: ";
     std::cin >> y_aux;
-    //if (EsCoordenadaValida(x_aux, y_aux)) {
+    if (EsCoordenadaValida(x_aux, y_aux)) {
       laberinto_[x_inicio_][y_inicio_] = PARED;
       x_inicio_ = x_aux;
       y_inicio_ = y_aux;
       laberinto_[x_inicio_][y_inicio_] = INICIO;
-      /*
     } else {
       std::cout << "\nError, coordenadas las coordenadas introducidas son "
                    "incorrectas\nLas coordenadas serán las originales"
                 << std::endl;
     }
-    */
   }
   // Posibilidad de cambiar casilla final
   std::cout << "\nLa casilla final actual está en las coordenadas:\n("
@@ -122,7 +120,6 @@ std::set<Nodo> Laberinto::AlgoritmoAEstrellaManhattan() {
   unsigned heuristica_inicial{ CalcularHeuristicaManhattan(x_inicio_, y_inicio_, x_final_, y_final_) };
   nodos_abiertos.insert(new Nodo(NULL, x_inicio_, y_inicio_,
                                  0, heuristica_inicial, heuristica_inicial));
-  // Métemos como nodo generado el nodo inicial
   while (!nodos_abiertos.empty()) {
     // Seleccionar el nodo de menor coste f(n), e insertarlo en la lista de
     // nodos cerrados C.
@@ -146,6 +143,7 @@ std::set<Nodo> Laberinto::AlgoritmoAEstrellaManhattan() {
       }
       delete nodo_camino;
       // Devolvemos el camino
+      camino_ = camino_solucion;
       return camino_solucion;
     }
     // inspeccionamos nodos vecinos
@@ -219,6 +217,7 @@ std::set<Nodo> Laberinto::AlgoritmoAEstrellaEuclidea() {
       }
       delete nodo_camino;
       // Devolvemos el camino
+      camino_ = camino_solucion;
       return camino_solucion;
     }
     // inspeccionamos nodos vecinos
@@ -262,7 +261,7 @@ std::set<Nodo> Laberinto::AlgoritmoAEstrellaEuclidea() {
 
 // Hazme un método que muestre el camino resuelto por el método Laberinto::AlgoritmoAEstrella() marcando el camino con X
 void Laberinto::MostrarCamino() {
-  for (const auto& nodo : AlgoritmoAEstrellaManhattan()) {
+  for (const auto& nodo : camino_) {
     camino_.insert(nodo);
     laberinto_[nodo.GetCoordenadaFila()][nodo.GetCoordenadaColumna()] = CAMINO;
   }
@@ -317,7 +316,7 @@ void Laberinto::MostrarEstadisticasSinCamino(const std::string& nombre_instancia
 
 // Sobrecarga de operador << para mostrar el laberinto por pantalla
 std::ostream& operator<<(std::ostream& os, const Laberinto& laberinto) {
-  std::cout << std::endl;
+  os << std::endl;
   for (size_t i{0}; i < laberinto.laberinto_.size(); ++i) { // Columnas
     for (size_t j{0}; j < laberinto.laberinto_[i].size(); ++j) { // Filas
       switch (laberinto.laberinto_[i][j]) {
